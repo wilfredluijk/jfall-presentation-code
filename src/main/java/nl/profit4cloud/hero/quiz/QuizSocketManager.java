@@ -106,25 +106,9 @@ public class QuizSocketManager {
 
 
     public boolean canPlay(ContestantStartMessage contestant) {
-        boolean canPlay = false;
-
-        switch (contestant.state()) {
-            case CONNECTED:
-                canPlay = true;
-                break;
-            case STARTED:
-                canPlay = true;
-                break;
-            case UNDEFINED:
-                canPlay = false;
-                break;
-            case BLOCKED:
-                canPlay = false;
-                break;
-            case FINISHED:
-                canPlay = false;
-                break;
-        }
-        return canPlay;
+        return switch (contestant.state()) {
+            case CONNECTED, STARTED -> true;
+            case UNDEFINED, BLOCKED, FINISHED -> false;
+        };
     }
 }

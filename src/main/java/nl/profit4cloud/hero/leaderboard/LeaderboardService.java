@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class LeaderboardService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LeaderboardService.class);
 
     private final ContestantRepository contestantRepository;
 
@@ -21,26 +22,27 @@ public class LeaderboardService {
     public List<LeaderboardEntry> entries() {
         return contestantRepository.findAll().stream()
                 .map(this::mapToLeaderboardEntry)
-                .sorted((o1, o2) -> Integer.compare(o2.getScore(), o1.getScore()))
+                .sorted((o1, o2) -> Integer.compare(o2.score(), o1.score()))
                 .toList();
     }
 
-private static final Logger LOGGER = LoggerFactory.getLogger(LeaderboardService.class);
-    public LeaderboardEntry mapToLeaderboardEntry(Contestant contestantQuizState) {
-        LOGGER.info("add to leaderboard {}", contestantQuizState);
-        var leaderboardEntry = new LeaderboardEntry();
-        leaderboardEntry.setContestantId(contestantQuizState.getId());
-        leaderboardEntry.setName(contestantQuizState.getName());
-        leaderboardEntry.setScore(contestantQuizState.getAnsweredQuestions().stream()
+    public LeaderboardEntry mapToLeaderboardEntry(Contestant contestant) {
+        var score = contestant.getAnsweredQuestions().stream()
                 .map(ContestantQuestionAnswer::getScore)
-                .reduce(0, Integer::sum));
-        leaderboardEntry.setCorrectQuestions(contestantQuizState.getAnsweredQuestions()
-                .stream()
+                .reduce(0, Integer::sum);
+
+        var correctQuestions = contestant.getAnsweredQuestions().stream()
                 .filter(ContestantQuestionAnswer::isCorrect)
-                .count());
-        leaderboardEntry.setTotalQuestions(contestantQuizState.getAnsweredQuestions().size());
-        LOGGER.info("add to leaderboard {}", leaderboardEntry);
-        return leaderboardEntry;
+                .count();
+
+        var totalQuestions = contestant.getAnsweredQuestions().size();
+
+        return new LeaderboardEntry(contestant.getId(),
+                contestant.getName(),
+                contestant.getId(),
+                score,
+                correctQuestions,
+                totalQuestions);
     }
 
 }

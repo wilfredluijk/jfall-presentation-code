@@ -4,19 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
 
 @Entity
-@Data
-public class LeaderboardEntry {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-
-    private String name;
-    private Integer contestantId;
-    private Integer score;
-    private Long correctQuestions;
-    private Integer totalQuestions;
+public record LeaderboardEntry(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        Integer id,
+        String name,
+        Integer contestantId,
+        Integer score,
+        Long correctQuestions,
+        Integer totalQuestions) {
 }
+
