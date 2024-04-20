@@ -83,6 +83,7 @@ public class QuizSocketManager {
                 .map(quizRoomManager::startGameFor)
                 .stream()
                 .peek(msg -> emitContestantUpdate())
+                .peek(msg -> canPlay(msg))
                 .findFirst()
                 .orElseThrow();
     }
@@ -97,7 +98,33 @@ public class QuizSocketManager {
 
     public void emitContestantUpdate() {
         var contestantsUpdate = quizRoomManager.getContestantsUpdate();
+
+
+
         webSocket.convertAndSend("/topic/gameManagerUpdate", contestantsUpdate);
     }
 
+
+    public boolean canPlay(ContestantStartMessage contestant) {
+        boolean canPlay = false;
+
+        switch (contestant.state()) {
+            case CONNECTED:
+                canPlay = true;
+                break;
+            case STARTED:
+                canPlay = true;
+                break;
+            case UNDEFINED:
+                canPlay = false;
+                break;
+            case BLOCKED:
+                canPlay = false;
+                break;
+            case FINISHED:
+                canPlay = false;
+                break;
+        }
+        return canPlay;
+    }
 }
