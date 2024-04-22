@@ -97,10 +97,8 @@ public class QuizSocketManager {
     }
 
     public void emitContestantUpdate() {
+
         var contestantsUpdate = quizRoomManager.getContestantsUpdate();
-
-
-
         webSocket.convertAndSend("/topic/gameManagerUpdate", contestantsUpdate);
     }
 

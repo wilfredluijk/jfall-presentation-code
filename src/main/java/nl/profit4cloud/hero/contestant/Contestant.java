@@ -27,7 +27,7 @@ public class Contestant {
     private String name;
     private String sessionId;
 
-    private boolean blocked;
+    private boolean blocked = false;
 
     @ElementCollection(fetch = FetchType.EAGER)
     public List<Integer> questionIds;

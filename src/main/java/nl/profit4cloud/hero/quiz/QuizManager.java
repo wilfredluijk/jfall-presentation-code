@@ -7,6 +7,8 @@ import nl.profit4cloud.hero.contestant.ContestantStartMessage;
 import nl.profit4cloud.hero.question.QuestionAnswer;
 import nl.profit4cloud.hero.question.QuestionDto;
 import nl.profit4cloud.hero.question.QuestionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +49,7 @@ public class QuizManager {
             contestant.setUid(uid);
             contestant.setSessionId(sessionId);
             contestant.setConnected(true);
+            contestantRepository.save(contestant);
         } else {
             contestantRepository.findByUid(uid).ifPresent(contestant -> {
                 if (!contestant.isBlocked()) {
@@ -113,11 +116,14 @@ public class QuizManager {
 
     public List<Contestant> getContestantsUpdate() {
         return contestantRepository.findAll().stream()
+                .peek((contestant) -> LOGGER.info("Contestant: {}", contestant))
                 .filter(contestant -> !contestant.isBlocked())
                 .toList();
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuizManager.class);
     public void handleAnswer(String sessionId, QuestionAnswer answer) {
+        LOGGER.info("Answer received from: {}, answer: {}", sessionId, answer);
         contestantRepository.findBySessionIdAndUid(sessionId, answer.uid()).ifPresent(contestant -> {
             if (contestant.isBlocked()) {
                 return;
