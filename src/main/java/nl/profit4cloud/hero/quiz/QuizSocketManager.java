@@ -14,14 +14,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Controller
 public class QuizSocketManager {
 
     private final QuizManager quizRoomManager;
