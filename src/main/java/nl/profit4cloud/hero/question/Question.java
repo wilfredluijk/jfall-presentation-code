@@ -1,5 +1,6 @@
 package nl.profit4cloud.hero.question;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +20,8 @@ public class Question {
 
     private String title;
     private String questionType;
+
+    @Column(length = 4000)
     private String question;
 
 
